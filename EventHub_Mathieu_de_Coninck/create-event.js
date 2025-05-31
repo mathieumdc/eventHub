@@ -25,10 +25,10 @@ form.addEventListener('submit', async (e) => {
             alert('Événement créé avec succès !');
             window.location.href = 'dashboard.html';
         } else {
-            alert('Erreur lors de la création de l’événement.');
+            alert('Error during event creation.');
         }
     } catch (error) {
-        console.error('Erreur lors de la création :', error);
-        alert('Une erreur est survenue.');
+        console.error('Error during creation :', error);
+        alert('An error has occurred.');
     }
 });

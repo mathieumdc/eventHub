@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value.trim();
 
-        console.log("Tentative de login avec:", { email, password }); // <-- Ajout
+        console.log("Tentative de login avec:", { email, password });
 
         try {
             const response = await fetch('http://localhost:3000/login', {
@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ email, password })
             });
 
-            console.log("Réponse du serveur:", response); // <-- Ajout
+            console.log("Réponse du serveur:", response);
 
             const data = await response.json();
-            console.log("Données reçues:", data); // <-- Ajout
+            console.log("Données reçues:", data);
 
             if (response.ok) {
                 localStorage.setItem('currentUser', JSON.stringify(data.user));
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(data.error || 'Login failed');
             }
         } catch (err) {
-            console.error('Erreur complète:', err);
+            console.error('Complete error:', err);
             errorMessage.textContent = err.message;
             errorMessage.style.display = 'block';
         }

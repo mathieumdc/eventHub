@@ -24,16 +24,15 @@ function editEvent(id) {
     window.location.href = `edit-event.html?id=${id}`;
 }
 
-// Chargement des événements depuis le backend
 async function loadEvents() {
     try {
         const response = await fetch(API_URL);
         events = await response.json();
         updateTable(events);
     } catch (error) {
-        console.error('Erreur lors du chargement des événements :', error);
+        console.error('Error loading events :', error);
     }
 }
 
-// Chargement automatique au démarrage
+
 window.addEventListener('DOMContentLoaded', loadEvents);

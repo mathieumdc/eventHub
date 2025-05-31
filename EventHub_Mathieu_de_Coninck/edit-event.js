@@ -1,11 +1,9 @@
 const API_URL = 'http://localhost:3000/events';
 const form = document.getElementById('edit-form');
 
-// 🔎 Récupérer l'ID depuis l'URL
 const urlParams = new URLSearchParams(window.location.search);
 const eventId = urlParams.get('id');
 
-// Vérification de l'ID
 if (!eventId) {
     alert('Aucun identifiant d’événement fourni dans l’URL.');
     throw new Error('Missing event ID');
@@ -18,7 +16,6 @@ if (isNaN(eventId)) {
 
 const numericEventId = Number(eventId);
 
-// 📥 Charger les données de l'événement
 async function loadEventData() {
     try {
         const response = await fetch(`${API_URL}/${numericEventId}`);
@@ -29,19 +26,17 @@ async function loadEventData() {
 
         const event = await response.json();
 
-        // Remplir le formulaire avec les données existantes
         document.getElementById('title').value = event.title || '';
         document.getElementById('category').value = event.category || '';
         document.getElementById('address').value = event.address || '';
         document.getElementById('date').value = event.date || '';
         document.getElementById('description').value = event.description || '';
     } catch (error) {
-        console.error('Erreur lors du chargement de l’événement :', error);
-        alert('Impossible de charger les données de l’événement.');
+        console.error('Error loading event :', error);
+        alert('Unable to load event data.');
     }
 }
 
-// 💾 Sauvegarder les modifications
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -63,18 +58,17 @@ form.addEventListener('submit', async (e) => {
         });
 
         if (response.ok) {
-            alert('Événement mis à jour avec succès !');
+            alert('Event successfully updated!');
             window.location.href = 'dashboard.html';
         } else {
             const errText = await response.text();
             console.error('Erreur serveur:', errText);
-            alert('Erreur lors de la mise à jour de l’événement.');
+            alert('Error updating event.');
         }
     } catch (error) {
-        console.error('Erreur lors de la mise à jour :', error);
-        alert('Une erreur est survenue.');
+        console.error('Update error :', error);
+        alert('An error has occurred.');
     }
 });
 
-// 🚀 Lancement
 loadEventData();

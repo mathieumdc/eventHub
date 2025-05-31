@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageDiv = document.getElementById('message');
 
     registerBtn.addEventListener('click', async () => {
-        // 1. Récupération des données
         const user = {
             name: document.getElementById('name').value,
             email: document.getElementById('email').value,
@@ -13,15 +12,13 @@ document.addEventListener('DOMContentLoaded', () => {
             locality: document.getElementById('locality').value
         };
 
-        // 2. Validation
         if (user.password !== user.confirmPassword) {
-            showMessage("Les mots de passe ne correspondent pas", "error");
+            showMessage("Passwords don't match", "error");
             return;
         }
 
-        // 3. Envoi au serveur
         try {
-            registerBtn.disabled = true; // Désactive le bouton pendant la requête
+            registerBtn.disabled = true;
             registerBtn.textContent = "Registration...";
 
             const response = await fetch('http://localhost:3000/users', {
@@ -35,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(error.error || "Error server");
             }
 
-            // Redirection après succès
             showMessage("Account created successfully! Redirection...", "success");
             setTimeout(() => {
                 window.location.href = 'dashboard.html';

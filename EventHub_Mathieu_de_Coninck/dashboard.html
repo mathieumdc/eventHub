@@ -37,7 +37,7 @@
                     </tr>
                 </thead>
                 <tbody id="event-table">
-                    <!-- Contenu généré dynamiquement -->
+
                 </tbody>
             </table>
         </section>
@@ -58,7 +58,6 @@
         const API_URL = 'http://localhost:3000/events';
         const tableBody = document.getElementById('event-table');
 
-        // Chargement des événements
         async function loadEvents() {
             const res = await fetch(API_URL);
             const events = await res.json();
@@ -104,7 +103,6 @@
             const text = await res.text();
             document.getElementById("weather-output").textContent = text;
         }
-        // Chargement au démarrage
         loadEvents();
         loadAboutSection();
     </script>
