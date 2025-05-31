@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - EventHub</title>
+    <link rel="stylesheet" href="register-styles.css">
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-box">
+            <h2>Create Account 📝</h2>
+            <p class="subtitle">Please fill the form to register</p>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="John Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthdate">Birthday</label>
+                    <input type="date" id="birthdate" name="birthdate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="locality">Locality</label>
+                    <input type="text" id="locality" name="locality" placeholder="Paris, France" required>
+                </div>
+
+                <button type="button" class="register-btn" id="registerBtn">Register</button>
+                <div class="extra-options">
+                    <a href="login.html">Already have an account? Login</a>
+                </div>
+            </form>
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+    <script src="register.js" defer></script>
+</body>
+</html>

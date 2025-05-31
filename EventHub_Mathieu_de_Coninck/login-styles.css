@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #f7f9fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.login-box {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    max-width: 400px;
+    width: 100%;
+}
+
+.login-box h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #222;
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border 0.2s;
+}
+
+.form-group input:focus {
+    border-color: #5b78f6;
+    outline: none;
+}
+
+.login-btn {
+    width: 100%;
+    background-color: #5b78f6;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.login-btn:hover {
+    background-color: #4a67e4;
+}
+
+.extra-options {
+    text-align: center;
+    margin-top: 12px;
+}
+
+.extra-options a {
+    font-size: 13px;
+    color: #5b78f6;
+    text-decoration: none;
+}
+
+.extra-options a:hover {
+    text-decoration: underline;
+}
+
+.register-btn {
+    width: 100%;
+    background-color: #e3e6f0;
+    color: #333;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+.register-btn:hover {
+    background-color: #d4d8e5;
+}

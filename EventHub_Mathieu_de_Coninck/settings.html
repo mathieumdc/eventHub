@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+    <link rel="stylesheet" href="settings-styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>EventHub</h2>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="create-event.html">Create Event</a></li>
+                <li><a class="active" href="settings.html">Settings</a></li>
+                <li><a href="login.html">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>General Settings</h1>
+        </header>
+
+        <section class="settings-form">
+            <div class="avatar-section">
+                <div class="avatar-circle">
+                    <img src="profile.jpg" alt="Profile Image">
+                </div>
+                <a href="#" class="upload-text">Upload image</a>
+            </div>
+
+            <form>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" value="Moni Roy">
+                    </div>
+                    <div class="form-group">
+                        <label for="language">Language</label>
+                        <input type="text" id="language" value="English">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="locality">Locality</label>
+                        <input type="text" id="locality" value="Edinburgh">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description">my name is Moni Roy I'm scottish, i live in edinburgh with my cat chouwi.</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group single">
+                    <label for="date">Anniversary Date</label>
+                    <input type="date" id="date" value="1999-04-19">
+                </div>
+
+                <button type="submit" class="save-btn">Save</button>
+            </form>
+        </section>
+    </div>
+</body>
+</html>

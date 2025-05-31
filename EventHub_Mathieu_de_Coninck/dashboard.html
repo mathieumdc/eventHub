@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home page</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>EventHub</h2>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Home Page</a></li>
+                <li><a href="create-event.html">Create Event</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="login.html">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Event List</h1>
+        </header>
+
+        <section>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Address</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="event-table">
+                    <!-- Contenu généré dynamiquement -->
+                </tbody>
+            </table>
+        </section>
+
+        <section id="weather-section">
+            <h2>Check Weather</h2>
+            <input type="text" id="city-input" placeholder="Enter a city">
+            <button onclick="getWeather()">Get Weather</button>
+            <pre id="weather-output"></pre>
+        </section>
+
+
+        <section id="about-section">
+        </section>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/events';
+        const tableBody = document.getElementById('event-table');
+
+        // Chargement des événements
+        async function loadEvents() {
+            const res = await fetch(API_URL);
+            const events = await res.json();
+
+            tableBody.innerHTML = '';
+            events.forEach((event, index) => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${event.title}</td>
+                    <td>${event.address}</td>
+                    <td>${event.date}</td>
+                    <td>${event.category}</td>
+                    <td>
+                        <button onclick="editEvent('${event.id}')">✏️ Edit</button>
+
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        function editEvent(id) {
+            window.location.href = `edit-event.html?id=${id}`;
+        }
+
+        async function loadAboutSection() {
+            const res = await fetch("https://raw.githubusercontent.com/mathieumdc/eventHub/refs/heads/main/about_us.html");
+            const html = await res.text();
+            document.getElementById("about-section").innerHTML = html;
+        }
+
+        async function getWeather() {
+            const city = document.getElementById("city-input").value;
+            if (!city) {
+                alert("Please enter a city name.");
+                return;
+            }
+
+            const res = await fetch(`https://wttr.in/${city}?format=3`);
+            const text = await res.text();
+            document.getElementById("weather-output").textContent = text;
+        }
+        // Chargement au démarrage
+        loadEvents();
+        loadAboutSection();
+    </script>
+</body>
+</html>
