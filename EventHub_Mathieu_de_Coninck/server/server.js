@@ -1,123 +1,121 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
 const cors = require('cors');
+const mysql = require('mysql2');
 
 const app = express();
 const PORT = 3000;
 
-const EVENTS_FILE = './events.json';
-const USERS_FILE = './users.json';
-
 app.use(cors());
 app.use(express.json());
+app.use(express.static('public'));
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Connexion à MySQL
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',      // Par défaut sur XAMPP
+    password: '',      // Vide par défaut
+    database: 'eventhub'
+});
 
-// ----------------- EVENTS -----------------
+// Vérifier la connexion
+db.connect(err => {
+    if (err) throw err;
+    console.log('✅ Connected to MySQL database.');
+});
 
-function readEvents() {
-    if (!fs.existsSync(EVENTS_FILE)) return [];
-    const data = fs.readFileSync(EVENTS_FILE, 'utf-8');
-    return JSON.parse(data || '[]');
-}
-
-function writeEvents(events) {
-    fs.writeFileSync(EVENTS_FILE, JSON.stringify(events, null, 4));
-}
+// ----------- EVENTS -----------
 
 app.get('/events', (req, res) => {
-    const events = readEvents();
-    res.json(events);
-});
-
-app.post('/events', (req, res) => {
-    const events = readEvents();
-    const newEvent = req.body;
-    newEvent.id = Date.now();
-    events.push(newEvent);
-    writeEvents(events);
-    res.status(201).json({ message: 'Event created', event: newEvent });
-});
-
-app.put('/events/:id', (req, res) => {
-    const events = readEvents();
-    const id = parseInt(req.params.id);
-    const index = events.findIndex(e => e.id === id);
-    if (index === -1) return res.status(404).json({ error: 'Event not found' });
-
-    events[index] = { ...events[index], ...req.body };
-    writeEvents(events);
-    res.json({ message: 'Event updated', event: events[index] });
+    db.query('SELECT * FROM events', (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
 });
 
 app.get('/events/:id', (req, res) => {
-    const events = readEvents();
-    const id = parseInt(req.params.id);
-    const event = events.find(e => e.id === id);
+    db.query('SELECT * FROM events WHERE id = ?', [req.params.id], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (results.length === 0) return res.status(404).json({ error: 'Event not found' });
 
-    if (!event) return res.status(404).json({ error: 'Event not found' });
+        const event = results[0];
 
-    res.json(event);
+        console.log("🔍 Event fetched from DB:", event);
+
+        res.json({
+            id: event.id,
+            title: event.title,
+            address: event.address,
+            date: event.date,
+            category: event.category,
+            description: event.Description || ''
+        });
+    });
 });
 
-// ----------------- USERS -----------------
+app.post('/events', (req, res) => {
+    const { title, address, date, category, description } = req.body;
+    db.query(
+        'INSERT INTO events (title, address, date, category, description) VALUES (?, ?, ?, ?, ?)', 
+        [title, address, date, category, description],
+        (err, result) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.status(201).json({ message: 'Event created', id: result.insertId });
+        }
+    );
+});
 
-function readUsers() {
-    if (!fs.existsSync(USERS_FILE)) return [];
-    const data = fs.readFileSync(USERS_FILE, 'utf-8');
-    return JSON.parse(data || '[]');
-}
+app.put('/events/:id', (req, res) => {
+    const { title, address, date, category, description } = req.body;
+    db.query(
+        'UPDATE events SET title = ?, address = ?, date = ?, category = ?, description = ? WHERE id = ?',
+        [title, address, date, category, description, req.params.id],
+        (err, result) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ message: 'Event updated' });
+        }
+    );
+});
 
-function writeUsers(users) {
-    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 4));
-}
+// ----------- USERS -----------
 
 app.get('/users', (req, res) => {
-    const users = readUsers();
-    res.json(users);
+    db.query('SELECT * FROM users', (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
 });
 
 app.post('/users', (req, res) => {
-    const users = readUsers();
     const { name, email, password, birthdate, locality } = req.body;
-
-    if (users.find(u => u.email === email)) {
-        return res.status(400).json({ error: 'Email already registered' });
-    }
-
-    const newUser = {
-        id: Date.now(),
-        name,
-        email,
-        password,
-        birthdate,
-        locality
-    };
-
-    users.push(newUser);
-    writeUsers(users);
-    res.status(201).json({ message: 'User created', user: newUser });
+    db.query('INSERT INTO users (name, email, password, birthdate, locality) VALUES (?, ?, ?, ?, ?)',
+        [name, email, password, birthdate, locality],
+        (err, result) => {
+            if (err) {
+                if (err.code === 'ER_DUP_ENTRY') {
+                    return res.status(400).json({ error: 'Email already registered' });
+                }
+                return res.status(500).json({ error: err.message });
+            }
+            res.status(201).json({ message: 'User created', id: result.insertId });
+        }
+    );
 });
 
-// ----------------- LOGIN -----------------
+// ----------- LOGIN -----------
 
 app.post('/login', (req, res) => {
-    console.log("Tentative de login avec:", req.body); // <-- Ajoute cette ligne
-    const users = readUsers();
     const { email, password } = req.body;
-
-    const user = users.find(u => u.email === email && u.password === password);
-    if (!user) {
-        console.log("Échec - Email ou mot de passe incorrect");
-        return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    console.log("Succès - User trouvé:", user); // <-- Ajoute cette ligne
-    res.json({ message: 'Login successful', user });
+    db.query('SELECT * FROM users WHERE email = ? AND password = ?', 
+        [email, password], 
+        (err, results) => {
+            if (err) return res.status(500).json({ error: err.message });
+            if (results.length === 0) return res.status(401).json({ error: 'Invalid credentials' });
+            res.json({ message: 'Login successful', user: results[0] });
+        }
+    );
 });
 
-// ----------------- SERVER -----------------
+// ----------- SERVER -----------
 
 app.listen(PORT, () => {
     console.log(`✅ Server running on http://localhost:${PORT}`);
