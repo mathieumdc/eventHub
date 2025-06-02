@@ -25,14 +25,27 @@ async function loadEventData() {
         }
 
         const event = await response.json();
+        console.log("📦 Event fetched from backend:", event);
+        console.log("📝 Description value:", event.description);
 
+        // Remplissage des champs
         document.getElementById('title').value = event.title || '';
         document.getElementById('category').value = event.category || '';
         document.getElementById('address').value = event.address || '';
         document.getElementById('date').value = event.date || '';
-        document.getElementById('description').value = event.description || '';
+
+        // Vérification supplémentaire : description
+        const descField = document.getElementById('description');
+
+        if (event.description !== undefined && event.description !== null) {
+            descField.value = event.description;
+        } else {
+            descField.value = '';
+            console.warn("⚠️ Description is undefined or null");
+        }
+
     } catch (error) {
-        console.error('Error loading event :', error);
+        console.error('Error loading event:', error);
         alert('Unable to load event data.');
     }
 }
@@ -47,6 +60,8 @@ form.addEventListener('submit', async (e) => {
         date: document.getElementById('date').value,
         description: document.getElementById('description').value.trim()
     };
+
+    console.log("📤 Updating event with data:", updatedEvent);
 
     try {
         const response = await fetch(`${API_URL}/${numericEventId}`, {
@@ -66,7 +81,7 @@ form.addEventListener('submit', async (e) => {
             alert('Error updating event.');
         }
     } catch (error) {
-        console.error('Update error :', error);
+        console.error('Update error:', error);
         alert('An error has occurred.');
     }
 });
