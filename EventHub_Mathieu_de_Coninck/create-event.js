@@ -22,7 +22,7 @@ form.addEventListener('submit', async (e) => {
         });
 
         if (response.ok) {
-            alert('Événement créé avec succès !');
+            alert('Event successfully created!');
             window.location.href = 'dashboard.html';
         } else {
             alert('Error during event creation.');
